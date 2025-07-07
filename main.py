@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 import os
+import json
+import os
 
 # Intents necesarios
 intents = discord.Intents.default()
@@ -11,7 +13,12 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Diccionario donde se guardan los perfiles (en memoria)
-perfiles = {}
+if os.path.exists("perfiles.json"):
+    with open("perfiles.json", "r") as f:
+        perfiles = json.load(f)
+else:
+    perfiles = {}
+
 
 # -------------------------------------
 # COMANDO: PERFIL
@@ -65,6 +72,9 @@ async def perfil(ctx):
         "orientacion": orientacion.content,
         "interesado_en": interesado_en.content
     }
+    with open("perfiles.json", "w") as f:
+    json.dump(perfiles, f)
+
 
     await ctx.send("✅ ¡Tu perfil ha sido creado con éxito! Usa `!buscar` para encontrar personas.")
 
