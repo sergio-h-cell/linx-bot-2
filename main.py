@@ -17,7 +17,7 @@ if os.path.exists("perfiles.json"):
     with open("perfiles.json", "r") as f:
         perfiles = json.load(f)
 else:
-    perfiles = {}
+   
 
 
 # -------------------------------------
@@ -72,8 +72,9 @@ async def perfil(ctx):
         "orientacion": orientacion.content,
         "interesado_en": interesado_en.content
     }
-    with open("perfiles.json", "w") as f:
-    json.dump(perfiles, f)
+  with open("perfiles.json", "w") as f:
+    json.dump(perfiles, f, indent=4)
+
 
 
     await ctx.send("✅ ¡Tu perfil ha sido creado con éxito! Usa `!buscar` para encontrar personas.")
@@ -83,21 +84,22 @@ async def perfil(ctx):
 # -------------------------------------
 @bot.command()
 async def buscar(ctx):
-    autor_id = str(ctx.author.id)
+    server_id = str(ctx.guild.id)
+    user_id = str(ctx.author.id)
 
-    if autor_id not in perfiles:
+    if server_id not in perfiles or user_id not in perfiles[server_id]:
         await ctx.send("❌ No tienes un perfil. Usa `!perfil` para registrarte primero.")
         return
 
-    # Excluir al que busca
-    candidatos = [uid for uid in perfiles if uid != autor_id]
+    # Obtener todos los usuarios del mismo servidor (menos tú)
+    candidatos = [uid for uid in perfiles[server_id] if uid != user_id]
 
     if not candidatos:
         await ctx.send("😔 No hay más personas registradas todavía. Intenta más tarde.")
         return
 
     # Mostrar el primer perfil encontrado
-    perfil = perfiles[candidatos[0]]
+    perfil = perfiles[server_id][candidatos[0]]
     embed = discord.Embed(
         title=f"🔎 Encontrado: {perfil['nombre']}",
         description=f"Edad: {perfil['edad']}\n"
@@ -108,6 +110,7 @@ async def buscar(ctx):
         color=discord.Color.pink()
     )
     await ctx.send(embed=embed)
+
 
 # -------------------------------------
 # COMANDO: HELP
