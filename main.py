@@ -124,3 +124,11 @@ else:
     from keep_alive import keep_alive
     keep_alive()
     bot.run(TOKEN)
+    TOKEN = os.getenv("TOKEN")
+
+if TOKEN is None:
+    print("❌ ERROR: TOKEN no está definido")
+    exit(1)
+
+print(f"TOKEN recibido: {TOKEN[:5]}...")  # Ahora sí es seguro porque TOKEN no es None
+
