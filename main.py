@@ -17,7 +17,8 @@ if os.path.exists("perfiles.json"):
     with open("perfiles.json", "r") as f:
         perfiles = json.load(f)
 else:
-   
+    perfiles = {}
+
 
 
 # -------------------------------------
